@@ -1,5 +1,5 @@
 ---
-title: "BCCWJ-SPR OT (subjrate)"
+title: "BCCWJ-SPR OW (subjrate)"
 author: "Masayuki Asahara"
 date: "2021/06/26"
 output:
@@ -19,7 +19,7 @@ head(d)
 
 ## Modeling
 ### Libraries
-```{r reading_library, echo=FALSE}
+```{r reading_library}
 library(lme4)
 library(stargazer)
 ```
