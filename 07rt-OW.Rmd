@@ -1,0 +1,55 @@
+---
+title: "BCCWJ-SPR OT (subjrate)"
+author: "Masayuki Asahara"
+date: "2021/06/26"
+output:
+  html_document:
+    toc: true
+    toc_float: true    
+---
+
+# Preparation
+## Reading file
+```{r reading_file}
+d = read.table("07rt-OW-unmasked.txt",sep="\t",header=TRUE,fileEncoding="UTF-8")
+d$SPR_subj_ID_factor = as.factor(d$SPR_subj_ID)
+d$SPR_log_reading_time = log(d$SPR_reading_time)
+head(d)
+```
+
+## Modeling
+### Libraries
+```{r reading_library, echo=FALSE}
+library(lme4)
+library(stargazer)
+```
+
+### Reading time modeling
+```{r model_all}
+model_all = lmer(SPR_reading_time~SPR_sentence_ID+SPR_bunsetsu_ID+SPR_word_length+DepPara_depnum+WFR_subj_rate+(1|SPR_subj_ID_factor),data=d,REML=FALSE)
+summary(model_all)
+stargazer(model_all)
+```
+Trim 3SD：
+```{r model_trim_3sd}
+d_trim = d[scale(resid(model_all)) < 3.0 , ]
+nrow(d) - nrow(d_trim)
+(nrow(d) - nrow(d_trim)) / nrow(d)
+model_trim = lmer(SPR_reading_time~SPR_sentence_ID+SPR_bunsetsu_ID+SPR_word_length+DepPara_depnum+WFR_subj_rate+(1|SPR_subj_ID_factor),data=d_trim,REML=FALSE)
+summary(model_trim)
+stargazer(model_trim)
+```
+
+### Reading log time modeling
+```{r log_model_all}
+log_model_all = lmer(SPR_log_reading_time~SPR_sentence_ID+SPR_bunsetsu_ID+SPR_word_length+DepPara_depnum+WFR_subj_rate+(1|SPR_subj_ID_factor),data=d,REML=FALSE)
+summary(log_model_all)
+```
+Trim 3SD：
+```{r log_model_trim_3sd}
+d_trim_log = d[scale(resid(log_model_all)) < 3.0 , ]
+nrow(d) - nrow(d_trim_log)
+(nrow(d) - nrow(d_trim_log)) / nrow(d)
+log_model_trim = lmer(SPR_log_reading_time~SPR_sentence_ID+SPR_bunsetsu_ID+SPR_word_length+DepPara_depnum+WFR_subj_rate+(1|SPR_subj_ID_factor),data=d_trim_log,REML=FALSE)
+summary(log_model_trim)
+```
