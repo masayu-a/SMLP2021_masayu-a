@@ -9,7 +9,7 @@ I am an participant of the `Advenced methods in frequentist statistics with Juli
 ## Data
 ### 07rt-OW-unmasked.txt
 The original file is from https://github.com/masayu-a/BCCWJ-SPR2/
-The data includes reading time data by
+The data includes reading time data by self paced reading.
 The text data is whitepaper by the ministry of education, culture, sports, and technology, Japan.
 
 > 文部科学省白書 文部科学省 (2005) （独）国立印刷局
