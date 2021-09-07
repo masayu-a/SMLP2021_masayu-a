@@ -72,6 +72,58 @@ stargazer(model_all)
 - WFR_subj_rate is the result of vocab test.
 - (1|SPR_subj_ID_factor) is the random effect of the subject participants
 
+
+## Data (added 2021/09/07)
+### 07rt-PB-masked2.txt.gz
+
+Whereas OW is a copyright free text and only one document,
+PB are 83 documents from published books.
+The surface is masked.
+
+A subject participant may participate more than one trial.
+** SPR_trial ** is the traial order by a subject participant.
+			    
+#### format
+- BCCWJ_Sample_ID	    Sample ID in BCCWJ
+- BCCWJ_start		    Offset in BCCWJ
+- SPR_sentence_ID	    Sentence ID in ibexfarm
+- SPR_bunsetsu_ID	    Phrase ID in ibexfarm
+- SPR_surface		    Surface form
+- DepPara_depnum	    Number of the dependent
+- SPR_word_length	    Character number of the surface form
+- SPR_reading_time	    Reading time (msec)
+- **SPR_trial**		    the trial order (by a subject participant)
+- SPR_subj_ID		    ID of subject participants in self paced reading experiment
+- WFR_subj_rate		    vocab test results of the subject participant in word familiarity rate
+
+
+### 07rt-OT-masked2.txt.gz
+
+OT are 38 documents from textbooks of Japanese language.
+The surface is masked.
+
+Note, the prefix of BCCWJ_Sample_ID denotes the school type: OT01 means elementary school text book, OT02 means junior high school text book, and OT03 means high school text book.
+
+A subject participant may participate more than one trial.
+** SPR_trial ** is the traial order by a subject participant.
+
+Since we have not do treebanking yet for tha data,
+DepPara_depnum is not available.
+
+#### format
+- BCCWJ_Sample_ID	    Sample ID in BCCWJ
+- BCCWJ_start		    Offset in BCCWJ
+- SPR_sentence_ID	    Sentence ID in ibexfarm
+- SPR_bunsetsu_ID	    Phrase ID in ibexfarm
+- SPR_surface		    Surface form
+- DepPara_depnum	    Number of the dependent ** Not Available **
+- SPR_word_length	    Character number of the surface form
+- SPR_reading_time	    Reading time (msec)
+- **SPR_trial**		    the trial order (by a subject participant)
+                            a subject participant may participate more than one trial. 
+- SPR_subj_ID		    ID of subject participants in self paced reading experiment
+- WFR_subj_rate		    vocab test results of the subject participant in word familiarity rate
+
 ## License
 
 CC BY 4.0
