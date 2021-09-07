@@ -21,16 +21,16 @@ The subject participants were recruited using [Yahoo! Crowdsourcing](https://cro
 The settings are in https://github.com/masayu-a/ibexfarm_OW6X_00000
 
 #### format
-- BCCWJ_Sample_ID	    Sample ID in BCCWJ
-- BCCWJ_start		    Offset in BCCWJ
-- SPR_sentence_ID	    Sentence ID in ibexfarm
-- SPR_bunsetsu_ID	    Phrase ID in ibexfarm
-- SPR_surface		    Surface form
+- **BCCWJ_Sample_ID**	    Sample ID in BCCWJ
+- **BCCWJ_start**		    Offset in BCCWJ
+- **SPR_sentence_ID**	    Sentence ID in ibexfarm
+- **SPR_bunsetsu_ID**	    Phrase ID in ibexfarm
+- **SPR_surface**		    Surface form
 - DepPara_bid		    Phrase ID in BCCWJ-DepPara which is Japanese bunsetsu(phrase) dependency annotation
 - DepPara_depid		    Dependent phrase ID in BCCWJ-DepPara which is Japanese bunsetsu(phrase) dependency annotation 
-- DepPara_depnum	    Number of the dependent
-- SPR_word_length	    Character number of the surface form
-- SPR_reading_time	    Reading time (msec)
+- **DepPara_depnum**	    Number of the dependent
+- **SPR_word_length**	    Character number of the surface form
+- **SPR_reading_time**	    Reading time (msec)
 - SPR_sentence		    Whole sentence including the surface form
 - SPR_instruction_time	    Instruction time of the subject participants
 - SPR_QA_question	    QA after the session: (question)
@@ -39,11 +39,11 @@ The settings are in https://github.com/masayu-a/ibexfarm_OW6X_00000
 - SPR_QA_qa_time	    QA time
 - SPR_averageRT		    Average reading time of the subject participant
 - SPR_timestamp		    Timestamp when the session is performed
-- SPR_subj_ID		    ID of subject participants in self paced reading experiment
+- **SPR_subj_ID**		    ID of subject participants in self paced reading experiment
 - SPR_control		    Control (with or without space)
 - SPR_control_ID	    Control (with or without space)
 - WFR_subj_id		    ID of the subject participant in word familiarity rate experiment
-- WFR_subj_rate		    vocab test results of the subject participant in word familiarity rate
+- **WFR_subj_rate**		    vocab test results of the subject participant in word familiarity rate
 
 #### what is word familiarity rate and vocab test results?
 
