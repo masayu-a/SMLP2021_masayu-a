@@ -4,7 +4,7 @@
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 05fe2a9c-5a08-46ce-ba5d-dda11dce7c98
+# ╔═╡ 8a787a3c-8787-4895-9193-71a963b3fd1c
 begin
 	using CairoMakie
 	using CSV
@@ -14,8 +14,14 @@ begin
 	CairoMakie.activate!(type="svg")
 end
 
+# ╔═╡ 2d14f209-68ce-466d-bacb-583e91b7dd92
+begin
+	using PlutoUI
+	TableOfContents()
+end
+
 # ╔═╡ 5b14df84-94dd-4a30-9006-f42193696b92
-md"# Japanese Reading Time Data"
+md"# Japanese Reading Time Data with vocabulary test results"
 
 # ╔═╡ 15830d74-05e4-4a4f-96b6-0b3029a246b2
 md"""
@@ -32,6 +38,18 @@ The data is collected using [ibexfarm](https://spellout.net/ibexfarm).
 The subject participants were recruited using [Yahoo! Crowdsourcing](https://crowdsourcing.yahoo.co.jp/).
 
 The settings are in https://github.com/masayu-a/ibexfarm_OW6X_00000
+"""
+
+# ╔═╡ 23ca4937-cd7c-4c32-9f2b-ec5269f00c42
+md"""
+#### what is word familiarity rate and vocab test results?
+
+We performed word familiarity rate estimation experiments.
+https://github.com/masayu-a/WLSP-familiarity
+
+> Masayuki Asahara (2019) Word Familiarity Rate Estimation Using a Bayesian Linear Mixed Model, Proceedings of the First Workshop on Aggregating and Analysing Crowdsourced Annotations for NLP, pages 6-14. https://www.aclweb.org/anthology/D19-5902.pdf
+
+We used the random effect of the subject participants as the result of vocab test.
 """
 
 # ╔═╡ 13edbaf5-56a4-4a08-8e79-63181faa3bd7
@@ -63,13 +81,15 @@ describe(df)
 # ╔═╡ 08f09231-a79c-4767-8a23-4157d1a16113
 md"""
 ## Analysis
-### Fixed Effects
+
+Fixed Effects
 * SPR\_sentence\_ID := sentence order (item)
 * SPR\_bunsetsu\_ID := phrase order with in a sentence (item)
 * SPR\_word\_length := number of characters (item)
 * DepPara\_depnum := number of attached dependent in syntactic dependency (item)
 * WFR\_subj_rate := rate of vocabulary test (subject)
-### Random Effects
+
+Random Effects
 * BCCWJ_start := items
 * SPR\_subj\_ID := subjects 
 """
@@ -93,6 +113,12 @@ model = fit(
 	REML=true,
 )
 
+# ╔═╡ 1fff170d-9609-4690-b79e-6e90ccfc2434
+md"""
+### caterpillar plots
+visualize the correlation between random slopes and random intercepts
+"""
+
 # ╔═╡ 6e922689-15f5-4c0a-b8ae-dd2211184c46
 caterpillar(model, :SPR_subj_ID)
 
@@ -105,6 +131,29 @@ qqcaterpillar(model)
 # ╔═╡ ae82a40e-f6aa-4fbe-877c-5029b97fcd92
 sum(leverage(model))
 
+# ╔═╡ 3f462dba-1b56-4dc5-a2ce-52e702c1b6e7
+md"""
+
+### plot observed vs. fit with base Makie
+"""
+
+# ╔═╡ c0b75b6e-d67d-412a-9317-efb6d5a3c9e0
+scatter(fitted(model),response(model))
+
+# ╔═╡ 6578789f-e77d-437f-a5fa-2678d8d778d8
+md"""
+### plot residuals vs. fitted
+"""
+
+# ╔═╡ 2c23ba4b-da84-4194-abd1-058b18a1fe0a
+scatter(residuals(model),fitted(model))
+
+# ╔═╡ 13f17c3e-a68a-4314-b739-0fc55d29d2f7
+md"### qqplot with line"
+
+# ╔═╡ fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
+qqnorm(model)
+
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
 [deps]
@@ -113,6 +162,7 @@ CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 MixedModels = "ff71e718-51f3-5ec2-a782-8ffcbfa3c316"
 MixedModelsMakie = "b12ae82c-6730-437f-aff9-d2c38332a376"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
 
 [compat]
 CSV = "~0.8.5"
@@ -120,6 +170,7 @@ CairoMakie = "~0.6.5"
 DataFrames = "~1.2.2"
 MixedModels = "~4.1.1"
 MixedModelsMakie = "~0.3.7"
+PlutoUI = "~0.7.9"
 """
 
 # ╔═╡ 00000000-0000-0000-0000-000000000002
@@ -957,6 +1008,12 @@ git-tree-sha1 = "9ff1c70190c1c30aebca35dc489f7411b256cd23"
 uuid = "995b91a9-d308-5afd-9ec6-746e21dbc043"
 version = "1.0.13"
 
+[[PlutoUI]]
+deps = ["Base64", "Dates", "InteractiveUtils", "JSON", "Logging", "Markdown", "Random", "Reexport", "Suppressor"]
+git-tree-sha1 = "44e225d5837e2a2345e69a1d1e01ac2443ff9fcb"
+uuid = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+version = "0.7.9"
+
 [[PolygonOps]]
 git-tree-sha1 = "c031d2332c9a8e1c90eca239385815dc271abb22"
 uuid = "647866c9-e3ac-4575-94e7-e3d426903924"
@@ -1174,6 +1231,11 @@ version = "1.7.3"
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
 
+[[Suppressor]]
+git-tree-sha1 = "a819d77f31f83e5792a76081eee1ea6342ab8787"
+uuid = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
+version = "0.2.0"
+
 [[TOML]]
 deps = ["Dates"]
 uuid = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
@@ -1356,18 +1418,27 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
+# ╠═8a787a3c-8787-4895-9193-71a963b3fd1c
+# ╠═2d14f209-68ce-466d-bacb-583e91b7dd92
 # ╠═5b14df84-94dd-4a30-9006-f42193696b92
 # ╠═15830d74-05e4-4a4f-96b6-0b3029a246b2
-# ╠═05fe2a9c-5a08-46ce-ba5d-dda11dce7c98
+# ╠═23ca4937-cd7c-4c32-9f2b-ec5269f00c42
 # ╠═13edbaf5-56a4-4a08-8e79-63181faa3bd7
 # ╠═2ad98112-7407-4813-ae4d-985a5204337d
 # ╠═bb64232a-02ea-4dce-9ec0-b340709f8965
 # ╠═e407fd49-3935-46c8-8fe4-9a7232e4a491
 # ╠═08f09231-a79c-4767-8a23-4157d1a16113
 # ╠═2f2ab76e-e57d-431c-b669-05e0646c61b7
+# ╠═1fff170d-9609-4690-b79e-6e90ccfc2434
 # ╠═6e922689-15f5-4c0a-b8ae-dd2211184c46
 # ╠═b31956c6-8f56-474b-89f4-9d34cc5fbf73
 # ╠═959ed656-5ec2-4013-8529-7057be3c27f3
 # ╠═ae82a40e-f6aa-4fbe-877c-5029b97fcd92
+# ╠═3f462dba-1b56-4dc5-a2ce-52e702c1b6e7
+# ╠═c0b75b6e-d67d-412a-9317-efb6d5a3c9e0
+# ╠═6578789f-e77d-437f-a5fa-2678d8d778d8
+# ╠═2c23ba4b-da84-4194-abd1-058b18a1fe0a
+# ╠═13f17c3e-a68a-4314-b739-0fc55d29d2f7
+# ╠═fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
