@@ -14,6 +14,43 @@ begin
 	CairoMakie.activate!(type="svg")
 end
 
+# ╔═╡ 5b14df84-94dd-4a30-9006-f42193696b92
+md"# Japanese Reading Time Data"
+
+# ╔═╡ 15830d74-05e4-4a4f-96b6-0b3029a246b2
+md"""
+## Data
+### 07rt-OW-unmasked2.txt
+The original file is from https://github.com/masayu-a/BCCWJ-SPR2/
+The data includes reading time data by self paced reading.
+The text data is whitepaper by the ministry of education, culture, sports, and technology, Japan.
+
+> 文部科学省白書 文部科学省 (2005) （独）国立印刷局
+
+#### how the data collect?
+The data is collected using [ibexfarm](https://spellout.net/ibexfarm).
+The subject participants were recruited using [Yahoo! Crowdsourcing](https://crowdsourcing.yahoo.co.jp/).
+
+The settings are in https://github.com/masayu-a/ibexfarm_OW6X_00000
+"""
+
+# ╔═╡ 13edbaf5-56a4-4a08-8e79-63181faa3bd7
+md"""
+#### format
+| Column                  | Description         |
+| ----------------------- | ------------------- |
+| BCCWJ\_Sample\_ID	  | Sample ID in BCCWJ  |
+| BCCWJ\_start		  | Offset in BCCWJ **items** |
+| SPR\_sentence\_ID	  | Sentence ID in ibexfarm |
+| SPR\_bunsetsu\_ID	  | Phrase ID in ibexfarm   |
+| SPR\_surface		  | Surface form            |
+| DepPara\_depnum	  | Number of the dependent |
+| SPR\_word\_length	  | Character number of the surface form |
+| SPR\_reading\_time	  | Reading time (ms) **to be estimated** |
+| SPR\_subj\_ID		  | ID of subject participants in self paced reading experiment **subjects** |
+| WFR\_subj\_rate		  |  vocab test results of the subject participant in word familiarity rate  |
+"""
+
 # ╔═╡ 2ad98112-7407-4813-ae4d-985a5204337d
 data = CSV.File("07rt-OW-unmasked2.txt",delim='\t')
 
@@ -23,25 +60,50 @@ df = DataFrame(data)
 # ╔═╡ e407fd49-3935-46c8-8fe4-9a7232e4a491
 describe(df)
 
-# ╔═╡ a47a3af0-15a5-42dd-b5a6-55ff1a877cd6
-m1 = fit(
+# ╔═╡ 08f09231-a79c-4767-8a23-4157d1a16113
+md"""
+## Analysis
+### Fixed Effects
+* SPR\_sentence\_ID := sentence order (item)
+* SPR\_bunsetsu\_ID := phrase order with in a sentence (item)
+* SPR\_word\_length := number of characters (item)
+* DepPara\_depnum := number of attached dependent in syntactic dependency (item)
+* WFR\_subj_rate := rate of vocabulary test (subject)
+### Random Effects
+* BCCWJ_start := items
+* SPR\_subj\_ID := subjects 
+"""
+
+# ╔═╡ 2f2ab76e-e57d-431c-b669-05e0646c61b7
+model = fit(
 	MixedModel,
 	@formula(
-		SPR_reading_time ~
+		log(SPR_reading_time) ~
 		1 + SPR_sentence_ID + SPR_bunsetsu_ID
 		+ SPR_word_length + DepPara_depnum +
-		(1 | SPR_subj_ID)
+		(1 | BCCWJ_start) + 	# items	
+		(1 | SPR_subj_ID) +     # subjects
+		WFR_subj_rate           # feature of subjects
 	),
 	df;
 	contrasts = Dict(
 		:SPR_subj_ID => Grouping(),
+		:BCCWJ_start => Grouping(),
 	),
 	REML=true,
 )
 
+# ╔═╡ 6e922689-15f5-4c0a-b8ae-dd2211184c46
+caterpillar(model, :SPR_subj_ID)
 
-# ╔═╡ 6186445c-b086-4ac9-8f02-0a90f3ad7496
-caterpillar(m1, :SPR_subj_ID)
+# ╔═╡ b31956c6-8f56-474b-89f4-9d34cc5fbf73
+caterpillar(model, :BCCWJ_start)
+
+# ╔═╡ 959ed656-5ec2-4013-8529-7057be3c27f3
+qqcaterpillar(model)
+
+# ╔═╡ ae82a40e-f6aa-4fbe-877c-5029b97fcd92
+sum(leverage(model))
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1294,11 +1356,18 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
+# ╠═5b14df84-94dd-4a30-9006-f42193696b92
+# ╠═15830d74-05e4-4a4f-96b6-0b3029a246b2
 # ╠═05fe2a9c-5a08-46ce-ba5d-dda11dce7c98
+# ╠═13edbaf5-56a4-4a08-8e79-63181faa3bd7
 # ╠═2ad98112-7407-4813-ae4d-985a5204337d
 # ╠═bb64232a-02ea-4dce-9ec0-b340709f8965
 # ╠═e407fd49-3935-46c8-8fe4-9a7232e4a491
-# ╠═a47a3af0-15a5-42dd-b5a6-55ff1a877cd6
-# ╠═6186445c-b086-4ac9-8f02-0a90f3ad7496
+# ╠═08f09231-a79c-4767-8a23-4157d1a16113
+# ╠═2f2ab76e-e57d-431c-b669-05e0646c61b7
+# ╠═6e922689-15f5-4c0a-b8ae-dd2211184c46
+# ╠═b31956c6-8f56-474b-89f4-9d34cc5fbf73
+# ╠═959ed656-5ec2-4013-8529-7057be3c27f3
+# ╠═ae82a40e-f6aa-4fbe-877c-5029b97fcd92
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
