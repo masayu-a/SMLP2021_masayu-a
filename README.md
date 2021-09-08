@@ -7,7 +7,7 @@ I am an participant of the `Advenced methods in frequentist statistics with Juli
 
 
 ## Data
-### 07rt-OW-unmasked.txt
+### 07rt-OW-unmasked2.txt
 The original file is from https://github.com/masayu-a/BCCWJ-SPR2/
 The data includes reading time data by self paced reading.
 The text data is whitepaper by the ministry of education, culture, sports, and technology, Japan.
@@ -26,24 +26,13 @@ The settings are in https://github.com/masayu-a/ibexfarm_OW6X_00000
 - **SPR_sentence_ID**	    Sentence ID in ibexfarm
 - **SPR_bunsetsu_ID**	    Phrase ID in ibexfarm
 - **SPR_surface**		    Surface form
-- DepPara_bid		    Phrase ID in BCCWJ-DepPara which is Japanese bunsetsu(phrase) dependency annotation
-- DepPara_depid		    Dependent phrase ID in BCCWJ-DepPara which is Japanese bunsetsu(phrase) dependency annotation 
 - **DepPara_depnum**	    Number of the dependent
 - **SPR_word_length**	    Character number of the surface form
 - **SPR_reading_time**	    Reading time (msec)
-- SPR_sentence		    Whole sentence including the surface form
-- SPR_instruction_time	    Instruction time of the subject participants
-- SPR_QA_question	    QA after the session: (question)
-- SPR_QA_answer		    QA after the session: (answer by the subject participants)
-- SPR_QA_correct	    Is the answer of QA correct? (we include the sample with SPR_QA_correct = true)
-- SPR_QA_qa_time	    QA time
-- SPR_averageRT		    Average reading time of the subject participant
-- SPR_timestamp		    Timestamp when the session is performed
 - **SPR_subj_ID**		    ID of subject participants in self paced reading experiment
-- SPR_control		    Control (with or without space)
-- SPR_control_ID	    Control (with or without space)
-- WFR_subj_id		    ID of the subject participant in word familiarity rate experiment
 - **WFR_subj_rate**		    vocab test results of the subject participant in word familiarity rate
+
+The composite primary key is [SPR_sentence_ID, SPR_bunsetsu_ID, SPR_subj_ID].
 
 #### what is word familiarity rate and vocab test results?
 
@@ -71,57 +60,6 @@ stargazer(model_all)
 - DepPara_depnum is the attachment number of the dependent in the dependency structures. Note that, since Japanese is strictly head final language, the dependents always precede to the head phrase.
 - WFR_subj_rate is the result of vocab test.
 - (1|SPR_subj_ID_factor) is the random effect of the subject participants
-
-
-## Data (added 2021/09/07)
-### 07rt-PB-masked2.txt.gz
-
-Whereas OW is a copyright free text and only one document,
-PB are 83 documents from published books.
-The surface is masked.
-
-A subject participant may participate more than one trial.
-**SPR_trial** is the trial order by a subject participant.
-			    
-#### format
-- BCCWJ_Sample_ID	    Sample ID in BCCWJ
-- BCCWJ_start		    Offset in BCCWJ
-- SPR_sentence_ID	    Sentence ID in ibexfarm
-- SPR_bunsetsu_ID	    Phrase ID in ibexfarm
-- SPR_surface		    Surface form **masked**
-- DepPara_depnum	    Number of the dependent
-- SPR_word_length	    Character number of the surface form
-- SPR_reading_time	    Reading time (msec)
-- **SPR_trial**		    the trial order (by a subject participant)
-- SPR_subj_ID		    ID of subject participants in self paced reading experiment
-- WFR_subj_rate		    vocab test results of the subject participant in word familiarity rate
-
-
-### 07rt-OT-masked2.txt.gz
-
-OT are 38 documents from textbooks of Japanese language.
-The surface is masked.
-
-Note, the prefix of BCCWJ_Sample_ID denotes the school type: **OT01** means elementary school text book, **OT02** means junior high school text book, and **OT03** means high school text book.
-
-A subject participant may participate more than one trial.
-**SPR_trial** is the trial order by a subject participant.
-
-Since we have not do treebanking yet for tha data,
-DepPara_depnum is not available.
-
-#### format
-- BCCWJ_Sample_ID	    Sample ID in BCCWJ
-- BCCWJ_start		    Offset in BCCWJ
-- SPR_sentence_ID	    Sentence ID in ibexfarm
-- SPR_bunsetsu_ID	    Phrase ID in ibexfarm
-- SPR_surface		    Surface form **masked**
-- DepPara_depnum	    Number of the dependent **Not Available**
-- SPR_word_length	    Character number of the surface form
-- SPR_reading_time	    Reading time (msec)
-- **SPR_trial**		    the trial order (by a subject participant)
-- SPR_subj_ID		    ID of subject participants in self paced reading experiment
-- WFR_subj_rate		    vocab test results of the subject participant in word familiarity rate
 
 ## License
 
