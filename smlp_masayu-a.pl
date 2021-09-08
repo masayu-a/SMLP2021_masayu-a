@@ -79,8 +79,8 @@ df = DataFrame(data)
 describe(df)
 
 # ╔═╡ 08f09231-a79c-4767-8a23-4157d1a16113
-md"""
-## Analysis
+md""" 
+## Analysis (model1)
 
 Fixed Effects
 * SPR\_sentence\_ID := sentence order (item)
@@ -100,10 +100,10 @@ model = fit(
 	@formula(
 		log(SPR_reading_time) ~
 		1 + SPR_sentence_ID + SPR_bunsetsu_ID
-		+ SPR_word_length + DepPara_depnum +
+		+ SPR_word_length + DepPara_depnum + # feature of item
 		(1 | BCCWJ_start) + 	# items	
 		(1 | SPR_subj_ID) +     # subjects
-		WFR_subj_rate           # feature of subjects
+		WFR_subj_rate           # feature of subject
 	),
 	df;
 	contrasts = Dict(
@@ -153,6 +153,30 @@ md"### qqplot with line"
 
 # ╔═╡ fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
 qqnorm(model)
+
+# ╔═╡ 7370c789-da6f-46b4-bdbe-9b1f826275a2
+md"""
+## Analysis (model2)
+"""
+
+# ╔═╡ c0c582e1-423c-4c73-88bd-d937cb9d20e3
+model2 = fit(
+	MixedModel,
+	@formula(
+		log(SPR_reading_time) ~
+		1 + SPR_sentence_ID + SPR_bunsetsu_ID
+		+ SPR_word_length + DepPara_depnum + # feature of item
+		(1 + WFR_subj_rate | BCCWJ_start) + 	# items	
+		(1 + SPR_sentence_ID + SPR_bunsetsu_ID + SPR_word_length + DepPara_depnum | SPR_subj_ID) +     # subjects
+		WFR_subj_rate           # feature of subject
+	),
+	df;
+	contrasts = Dict(
+		:SPR_subj_ID => Grouping(),
+		:BCCWJ_start => Grouping(),
+	),
+	REML=true,
+)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -1418,27 +1442,29 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╠═8a787a3c-8787-4895-9193-71a963b3fd1c
-# ╠═2d14f209-68ce-466d-bacb-583e91b7dd92
-# ╠═5b14df84-94dd-4a30-9006-f42193696b92
-# ╠═15830d74-05e4-4a4f-96b6-0b3029a246b2
-# ╠═23ca4937-cd7c-4c32-9f2b-ec5269f00c42
-# ╠═13edbaf5-56a4-4a08-8e79-63181faa3bd7
+# ╟─8a787a3c-8787-4895-9193-71a963b3fd1c
+# ╟─2d14f209-68ce-466d-bacb-583e91b7dd92
+# ╟─5b14df84-94dd-4a30-9006-f42193696b92
+# ╟─15830d74-05e4-4a4f-96b6-0b3029a246b2
+# ╟─23ca4937-cd7c-4c32-9f2b-ec5269f00c42
+# ╟─13edbaf5-56a4-4a08-8e79-63181faa3bd7
 # ╠═2ad98112-7407-4813-ae4d-985a5204337d
 # ╠═bb64232a-02ea-4dce-9ec0-b340709f8965
 # ╠═e407fd49-3935-46c8-8fe4-9a7232e4a491
 # ╠═08f09231-a79c-4767-8a23-4157d1a16113
 # ╠═2f2ab76e-e57d-431c-b669-05e0646c61b7
-# ╠═1fff170d-9609-4690-b79e-6e90ccfc2434
+# ╟─1fff170d-9609-4690-b79e-6e90ccfc2434
 # ╠═6e922689-15f5-4c0a-b8ae-dd2211184c46
 # ╠═b31956c6-8f56-474b-89f4-9d34cc5fbf73
 # ╠═959ed656-5ec2-4013-8529-7057be3c27f3
 # ╠═ae82a40e-f6aa-4fbe-877c-5029b97fcd92
-# ╠═3f462dba-1b56-4dc5-a2ce-52e702c1b6e7
+# ╟─3f462dba-1b56-4dc5-a2ce-52e702c1b6e7
 # ╠═c0b75b6e-d67d-412a-9317-efb6d5a3c9e0
-# ╠═6578789f-e77d-437f-a5fa-2678d8d778d8
+# ╟─6578789f-e77d-437f-a5fa-2678d8d778d8
 # ╠═2c23ba4b-da84-4194-abd1-058b18a1fe0a
-# ╠═13f17c3e-a68a-4314-b739-0fc55d29d2f7
+# ╟─13f17c3e-a68a-4314-b739-0fc55d29d2f7
 # ╠═fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
+# ╠═7370c789-da6f-46b4-bdbe-9b1f826275a2
+# ╠═c0c582e1-423c-4c73-88bd-d937cb9d20e3
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
