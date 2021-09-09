@@ -154,6 +154,17 @@ md"### qqplot with line"
 # ╔═╡ fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
 qqnorm(model)
 
+# ╔═╡ db28a0f2-6920-4759-8096-8e4f76f1853f
+begin
+	using Random
+	
+	model_bstrp = parametricbootstrap(MersenneTwister(42), １0, model);
+	ridgeplot(model_bstrp; show_intercept=false)
+end
+
+# ╔═╡ e8ce5dc5-8980-401e-8c94-95d8be088cf2
+
+
 # ╔═╡ 7370c789-da6f-46b4-bdbe-9b1f826275a2
 md"""
 ## Analysis (model2)
@@ -167,7 +178,32 @@ model2 = fit(
 		1 + SPR_sentence_ID + SPR_bunsetsu_ID
 		+ SPR_word_length + DepPara_depnum + # feature of item
 		(1 + WFR_subj_rate | BCCWJ_start) + 	# items	
-		(1 + SPR_sentence_ID + SPR_bunsetsu_ID + SPR_word_length + DepPara_depnum | SPR_subj_ID) +     # subjects
+		(1  | SPR_subj_ID) +     # subjects
+		WFR_subj_rate           # feature of subject
+	),
+	df;
+	contrasts = Dict(
+		:SPR_subj_ID => Grouping(),
+		:BCCWJ_start => Grouping(),
+	),
+	REML=true,
+)
+
+# ╔═╡ 9a667552-38eb-4012-838d-e252a7394fa9
+md"""
+## Analysis (model3)
+"""
+
+# ╔═╡ ede186cc-29b6-4e18-8163-66b3585e5de1
+model3 = fit(
+
+	MixedModel,
+	@formula(
+		log(SPR_reading_time) ~
+		1 + SPR_sentence_ID + SPR_bunsetsu_ID
+		+ SPR_word_length + DepPara_depnum + # feature of item
+		(1 + WFR_subj_rate | BCCWJ_start) + 	# items	
+		(1  + DepPara_depnum | SPR_subj_ID) +     # subjects
 		WFR_subj_rate           # feature of subject
 	),
 	df;
@@ -1442,7 +1478,7 @@ version = "3.5.0+0"
 """
 
 # ╔═╡ Cell order:
-# ╟─8a787a3c-8787-4895-9193-71a963b3fd1c
+# ╠═8a787a3c-8787-4895-9193-71a963b3fd1c
 # ╟─2d14f209-68ce-466d-bacb-583e91b7dd92
 # ╟─5b14df84-94dd-4a30-9006-f42193696b92
 # ╟─15830d74-05e4-4a4f-96b6-0b3029a246b2
@@ -1464,7 +1500,11 @@ version = "3.5.0+0"
 # ╠═2c23ba4b-da84-4194-abd1-058b18a1fe0a
 # ╟─13f17c3e-a68a-4314-b739-0fc55d29d2f7
 # ╠═fdf69b95-7e54-46f4-8eb0-540c8f5f6eb6
+# ╠═db28a0f2-6920-4759-8096-8e4f76f1853f
+# ╠═e8ce5dc5-8980-401e-8c94-95d8be088cf2
 # ╠═7370c789-da6f-46b4-bdbe-9b1f826275a2
 # ╠═c0c582e1-423c-4c73-88bd-d937cb9d20e3
+# ╠═9a667552-38eb-4012-838d-e252a7394fa9
+# ╠═ede186cc-29b6-4e18-8163-66b3585e5de1
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
