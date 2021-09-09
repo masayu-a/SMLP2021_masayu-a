@@ -20,6 +20,9 @@ begin
 	TableOfContents()
 end
 
+# ╔═╡ f1096b5e-9aa4-4e8e-a608-e376e2e1b94f
+using Random
+
 # ╔═╡ 5b14df84-94dd-4a30-9006-f42193696b92
 md"# Japanese Reading Time Data with vocabulary test results"
 
@@ -95,7 +98,7 @@ Random Effects
 """
 
 # ╔═╡ 2f2ab76e-e57d-431c-b669-05e0646c61b7
-model = fit(
+model1 = fit(
 	MixedModel,
 	@formula(
 		log(SPR_reading_time) ~
@@ -110,8 +113,11 @@ model = fit(
 		:SPR_subj_ID => Grouping(),
 		:BCCWJ_start => Grouping(),
 	),
-	REML=true,
+	REML=false,
 )
+
+# ╔═╡ 066cb576-931e-4689-b54c-e7087b6a12b0
+issingular(model1)
 
 # ╔═╡ 1fff170d-9609-4690-b79e-6e90ccfc2434
 md"""
@@ -120,16 +126,16 @@ visualize the correlation between random slopes and random intercepts
 """
 
 # ╔═╡ 6e922689-15f5-4c0a-b8ae-dd2211184c46
-caterpillar(model, :SPR_subj_ID)
+caterpillar(model1, :SPR_subj_ID)
 
 # ╔═╡ b31956c6-8f56-474b-89f4-9d34cc5fbf73
-caterpillar(model, :BCCWJ_start)
+caterpillar(model1, :BCCWJ_start)
 
 # ╔═╡ 959ed656-5ec2-4013-8529-7057be3c27f3
-qqcaterpillar(model)
+qqcaterpillar(model1)
 
 # ╔═╡ ae82a40e-f6aa-4fbe-877c-5029b97fcd92
-sum(leverage(model))
+sum(leverage(model1))
 
 # ╔═╡ 3f462dba-1b56-4dc5-a2ce-52e702c1b6e7
 md"""
@@ -186,8 +192,11 @@ model2 = fit(
 		:SPR_subj_ID => Grouping(),
 		:BCCWJ_start => Grouping(),
 	),
-	REML=true,
+	REML=false,
 )
+
+# ╔═╡ aad09262-4f5f-4e2a-85b5-d01572ceaee5
+issingular(model2)
 
 # ╔═╡ 9a667552-38eb-4012-838d-e252a7394fa9
 md"""
@@ -211,8 +220,32 @@ model3 = fit(
 		:SPR_subj_ID => Grouping(),
 		:BCCWJ_start => Grouping(),
 	),
-	REML=true,
+	REML=false,
 )
+
+# ╔═╡ f3908292-db9b-4f99-9182-db006c6e8190
+issingular(model3)
+
+# ╔═╡ 6710cd3c-4bda-434b-aba0-21350546dd00
+md"## Model comparison"
+
+# ╔═╡ 196c21ff-0b19-400c-b4a0-0f0793e12833
+MixedModels.likelihoodratiotest(model1,model2,model3)
+
+# ╔═╡ db100c0f-8f8c-431c-9514-ee0a8df03db4
+begin
+	models = [model1, model2, model3]
+comp = DataFrame(dof=dof.(models),deviance=deviance.(models),AIC=aic.(models),AICc=aicc.(models),BIC=bic.(models))
+	end
+
+# ╔═╡ da472fa2-f374-4e13-b714-3826a771342a
+md"# XXX"
+
+# ╔═╡ 61b9d545-f517-405a-bb6f-67a0e2d19f2c
+bs = parametricbootstrap(MersenneTwister(42), 10, model3);
+
+# ╔═╡ e3ba539e-bbc4-4bac-97c6-c4b8aa51ebe5
+propertynames(bs)
 
 # ╔═╡ 00000000-0000-0000-0000-000000000001
 PLUTO_PROJECT_TOML_CONTENTS = """
@@ -223,6 +256,7 @@ DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 MixedModels = "ff71e718-51f3-5ec2-a782-8ffcbfa3c316"
 MixedModelsMakie = "b12ae82c-6730-437f-aff9-d2c38332a376"
 PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
 CSV = "~0.8.5"
@@ -1489,6 +1523,7 @@ version = "3.5.0+0"
 # ╠═e407fd49-3935-46c8-8fe4-9a7232e4a491
 # ╠═08f09231-a79c-4767-8a23-4157d1a16113
 # ╠═2f2ab76e-e57d-431c-b669-05e0646c61b7
+# ╠═066cb576-931e-4689-b54c-e7087b6a12b0
 # ╟─1fff170d-9609-4690-b79e-6e90ccfc2434
 # ╠═6e922689-15f5-4c0a-b8ae-dd2211184c46
 # ╠═b31956c6-8f56-474b-89f4-9d34cc5fbf73
@@ -1504,7 +1539,16 @@ version = "3.5.0+0"
 # ╠═e8ce5dc5-8980-401e-8c94-95d8be088cf2
 # ╠═7370c789-da6f-46b4-bdbe-9b1f826275a2
 # ╠═c0c582e1-423c-4c73-88bd-d937cb9d20e3
+# ╠═aad09262-4f5f-4e2a-85b5-d01572ceaee5
 # ╠═9a667552-38eb-4012-838d-e252a7394fa9
 # ╠═ede186cc-29b6-4e18-8163-66b3585e5de1
+# ╠═f3908292-db9b-4f99-9182-db006c6e8190
+# ╠═6710cd3c-4bda-434b-aba0-21350546dd00
+# ╠═196c21ff-0b19-400c-b4a0-0f0793e12833
+# ╠═db100c0f-8f8c-431c-9514-ee0a8df03db4
+# ╠═da472fa2-f374-4e13-b714-3826a771342a
+# ╠═f1096b5e-9aa4-4e8e-a608-e376e2e1b94f
+# ╠═61b9d545-f517-405a-bb6f-67a0e2d19f2c
+# ╠═e3ba539e-bbc4-4bac-97c6-c4b8aa51ebe5
 # ╟─00000000-0000-0000-0000-000000000001
 # ╟─00000000-0000-0000-0000-000000000002
