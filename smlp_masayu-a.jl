@@ -164,7 +164,7 @@ qqnorm(model1)
 begin
 	using Random
 	
-	model_bstrp = parametricbootstrap(MersenneTwister(42), １0, model);
+	model_bstrp = parametricbootstrap(MersenneTwister(42), １0, model1);
 	ridgeplot(model_bstrp; show_intercept=false)
 end
 
